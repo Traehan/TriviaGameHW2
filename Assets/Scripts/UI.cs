@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class UI : MonoBehaviour
 {
-
-    public GameObject StartButton;
+    
     public GameObject StartScreen;
-    public GameObject QuitButton;
     public GameObject TriviaGame;
+    public GameObject OptionsPanel;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,6 +24,7 @@ public class UI : MonoBehaviour
         //Disable Button
         StartScreen.SetActive(false);
         TriviaGame.SetActive(true);
+        OptionsPanel.SetActive(true);
         
         
         //start coroutine for 5 seconds
@@ -35,6 +35,10 @@ public class UI : MonoBehaviour
 
     public void OnButtonClickQuit()
     {
-        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.ExitPlaymode(); // or: UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit(); // quits the built game
+#endif
     }
 }
