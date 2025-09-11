@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Timer : MonoBehaviour
 {
     public float countdownTime;
     public Text countdownText;
+    
+    public event Action onTimerFinished;
 
     private bool isRunning;
     
@@ -26,7 +29,8 @@ public class Timer : MonoBehaviour
         {
             countdownTime = 0;
             isRunning = false;
-            //here is where you can call a method that marks the question wrong and goes to the next one
+            
+            onTimerFinished?.Invoke();
         }
 
         UpdateTimerDisplay();
