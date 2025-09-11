@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Collections;
 
 public class Timer : MonoBehaviour
 {
@@ -9,49 +10,53 @@ public class Timer : MonoBehaviour
     
     public event Action onTimerFinished;
 
-    private bool isRunning;
+    private Coroutine timerCoroutine;
     
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (isRunning)
-        {
-            TimerCountdown();
-        }
-    }
-
-    public void TimerCountdown()
-    {
-        //counts down the timer
-        countdownTime -= Time.deltaTime;
-        if (countdownTime <= 0)
-        {
-            countdownTime = 0;
-            isRunning = false;
-            
-            onTimerFinished?.Invoke();
-        }
-
-        UpdateTimerDisplay();
-    }
+    
 
     public void StartTimer(float startTime)
     {
+        // stops any running timers
+        if (timerCoroutine != null)
+        {
+            StopCoroutine(timerCoroutine);
+        }
+
         countdownTime = startTime;
-        isRunning = true;
+        timerCoroutine = StartCoroutine(TimerCountdown());
     }
 
     public void StopTimer()
     {
-        isRunning = false;
+        if (timerCoroutine != null)
+        {
+            StopCoroutine(timerCoroutine);
+            timerCoroutine = null;
+        }
     }
 
     public void ResetTimer(float newTime)
     {
+        StopTimer();
         countdownTime = newTime;
-        isRunning = true;
         UpdateTimerDisplay();
+        timerCoroutine = StartCoroutine(TimerCountdown());
+    }
+    
+    private IEnumerator TimerCountdown()
+    {
+        while (countdownTime > 0)
+        {
+            countdownTime -= Time.deltaTime;
+            UpdateTimerDisplay();
+            yield return null;
+        }
+
+        countdownTime = 0;
+        UpdateTimerDisplay();
+        timerCoroutine = null;
+        onTimerFinished?.Invoke();
     }
 
     public void UpdateTimerDisplay()
