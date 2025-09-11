@@ -8,7 +8,7 @@ public class TriviaGame : MonoBehaviour
     public GameObject UI;
     public GameObject TriviaPanel;
     public GameObject ResultPanel;
-    public Timer Timer;
+    public Countdown countdown;
     public Button[] AnswerButtons = new Button[2];
     public Text Question;
     public Text Answer_1;
@@ -26,7 +26,7 @@ public class TriviaGame : MonoBehaviour
     {
             questionCount = 0;
 
-            Timer.onTimerFinished += HandleTimeUp;
+            countdown.onCountdownFinished += HandleTimeUp;
             
             PlayRound();
         //display score
@@ -120,7 +120,7 @@ public class TriviaGame : MonoBehaviour
         if (questionCount < 3)
         {
             FillQuestion();
-            Timer.StartTimer(11);
+            countdown.StartCountdown(11);
             questionCount++;
         }
         else
