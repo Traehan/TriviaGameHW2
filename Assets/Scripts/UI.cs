@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
@@ -6,31 +8,43 @@ public class UI : MonoBehaviour
     public GameObject StartScreen;
     public GameObject TriviaGame;
     public GameObject OptionsPanel;
+    public GameObject CountDownPanel;
+    public GameObject GoPanel;
+    public Button startButton;   
+    public CountDown startTimer;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // make sure we only subscribe once
+        startTimer.onCountdownFinished -= HandleCountdownDone;
+        startTimer.onCountdownFinished += HandleCountdownDone;
     }
 
     public void OnButtonClickStart()
     {
-        //Disable Button
+        CountDownPanel.SetActive(true);
+        startTimer.StartCountdown(5f);
+    }
+    
+    private void HandleCountdownDone()
+    {
+        StartCoroutine(ShowGoThenStart());
+    }
+    
+    private System.Collections.IEnumerator ShowGoThenStart()
+    {
+        // show "GO" for ~1s
+        CountDownPanel.SetActive(false);
+        GoPanel.SetActive(true);
+        yield return new WaitForSeconds(1f);       // or WaitForSecondsRealtime(1f)
+        GoPanel.SetActive(false);
+
+        // move to game UI
+        CountDownPanel.SetActive(false);
         StartScreen.SetActive(false);
         TriviaGame.SetActive(true);
         OptionsPanel.SetActive(true);
-        
-        
-        //start coroutine for 5 seconds
-        //reveal GO
-        //disable Start Screen ---> Change to Game Screen
-        
     }
 
     public void OnButtonClickQuit()

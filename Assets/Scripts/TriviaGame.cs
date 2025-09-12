@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Unity.Multiplayer.Center.Common;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,158 +7,139 @@ public class TriviaGame : MonoBehaviour
     public GameObject UI;
     public GameObject TriviaPanel;
     public GameObject ResultPanel;
-    public Countdown countdown;
-    public Button[] AnswerButtons = new Button[2];
+    public CountDown roundTimer;
     public Text Question;
-    public Text Answer_1;
-    public Text Answer_2;
-    public Text Answer_3;
-    private int questionCount = 0;
-    bool answer_1 = false;
-    bool answer_2 = false;
-    bool answer_3 = false;
-    private int CorrectAnswerCount = 0;
+    public Text Answer_1, Answer_2, Answer_3;
     public Text ResultsText;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private int questionCount = 0;
+    private int CorrectAnswerCount = 0;
+    private bool answer_1, answer_2, answer_3;
+    private bool roundActive = false;
+
+    private Coroutine _watch; // <— watcher for “when time <= 1”
+
     void Start()
     {
-            questionCount = 0;
-
-            countdown.onCountdownFinished += HandleTimeUp;
-            
-            PlayRound();
-        //display score
+        questionCount = 0;
+        CorrectAnswerCount = 0;
+        StartRound();
     }
 
-    // Update is called once per frame
-    void Update()
+    void StartRound()
     {
-        
+        // kill any previous watcher
+        if (_watch != null)
+        {
+            StopCoroutine(_watch);
+            _watch = null;
+        }
+
+        FillQuestion();
+        roundActive = true;
+
+        roundTimer.StartCountdown(10f);
+        _watch = StartCoroutine(WaitUntilZeroThenAdvance());
     }
-    
+
+    IEnumerator WaitUntilZeroThenAdvance()
+    {
+        // advance when the timer shows 1 (or below), not 0
+        while (roundActive && roundTimer.countdownTime > 0f)
+            yield return null;
+
+        if (roundActive) EndRound();
+    }
+
+    void EndRound()
+    {
+        if (!roundActive) return;
+        roundActive = false;
+
+        if (_watch != null)
+        {
+            StopCoroutine(_watch);
+            _watch = null;
+        } // stop watcher
+
+        roundTimer.StopCountdown(); // stop timer
+
+        questionCount++;
+        if (questionCount < 3) StartRound();
+        else ShowResults();
+    }
+
+    void ShowResults()
+    {
+        TriviaPanel.SetActive(false);
+        ResultPanel.SetActive(true);
+        ResultsText.text = $"Score: {CorrectAnswerCount}/3";
+    }
+
     void FillQuestion()
     {
-        //randomize integers for the quiz
-        int x = Random.Range(0, 12);
-        int y = Random.Range(0, 12);
+        int x = Random.Range(1, 13);
+        int y = Random.Range(1, 13);
         int product = x * y;
+        int tinkerNumber = Random.Range(1, 8);
 
-        Question.text = x + "x" + y + "?";
-        int tinkerNumber =  Random.Range(1, 8); //generates a number to give the other answerboxes
+        Question.text = $"{x}x{y}?";
 
-        answer_1 = answer_2 = answer_3 = false; //resets each question boolean
-        int randomPromptNumber = Random.Range(1, 4); // randomizes which answer box gets the correct answer
+        answer_1 = answer_2 = answer_3 = false;
+        int slot = Random.Range(1, 4); // 1..3
 
-        if (randomPromptNumber == 1)
+        if (slot == 1)
         {
             Answer_1.text = product.ToString();
-            Answer_2.text = (product+tinkerNumber).ToString();
-            Answer_3.text = (product-tinkerNumber).ToString();
+            Answer_2.text = (product + tinkerNumber).ToString();
+            Answer_3.text = (product - tinkerNumber).ToString();
             answer_1 = true;
-            
-        } 
-        else if (randomPromptNumber == 2)
-        {
-            Answer_1.text = (product+tinkerNumber).ToString();
-            Answer_2.text = (product).ToString();
-            Answer_3.text = (product-tinkerNumber).ToString();
-            answer_2 = true;
-            
         }
-        else if (randomPromptNumber == 3)
+        else if (slot == 2)
         {
-            Answer_1.text = (product-tinkerNumber).ToString();
-            Answer_2.text = (product+tinkerNumber).ToString();
-            Answer_3.text = (product).ToString();
+            Answer_1.text = (product + tinkerNumber).ToString();
+            Answer_2.text = product.ToString();
+            Answer_3.text = (product - tinkerNumber).ToString();
+            answer_2 = true;
+        }
+        else
+        {
+            Answer_1.text = (product - tinkerNumber).ToString();
+            Answer_2.text = (product + tinkerNumber).ToString();
+            Answer_3.text = product.ToString();
             answer_3 = true;
         }
     }
 
     public void OnAnswerClick_One()
     {
-        if (answer_1 == true)
-        {
-            CorrectAnswerCount++;
-            PlayRound();
-        }
-        else
-        {
-            PlayRound();
-        }
+        if (answer_1) CorrectAnswerCount++;
+        EndRound();
     }
-    
+
     public void OnAnswerClick_Two()
     {
-        if (answer_2 == true)
-        {
-            CorrectAnswerCount++;
-            PlayRound();
-        }
-        else
-        {
-            PlayRound();
-        }
+        if (answer_2) CorrectAnswerCount++;
+        EndRound();
     }
-    
+
     public void OnAnswerClick_Three()
     {
-        if (answer_3 == true)
-        {
-            CorrectAnswerCount++;
-            PlayRound();
-        }
-        else
-        {
-            PlayRound();
-        }
+        if (answer_3) CorrectAnswerCount++;
+        EndRound();
     }
 
-    public void PlayRound()
-    {
-        if (questionCount < 3)
-        {
-            FillQuestion();
-            countdown.StartCountdown(11);
-            questionCount++;
-        }
-        else
-        {
-            TriviaPanel.SetActive(false);
-            ResultPanel.SetActive(true);
-            DisplayScore();
-        }
-    }
 
+    // restart from results
     public void OnClickRestartRound()
     {
-        if (TriviaPanel.activeInHierarchy == true) //checks if you are on Result Screen
-        {
-            questionCount = 0;
-            CorrectAnswerCount = 0;
-            PlayRound();
-        }
-        else
-        {
-            ResultPanel.SetActive(false);
-            UI.SetActive(false); //fixes bug where you can't press quit or restart, could optimize later
-            TriviaPanel.SetActive(true);
-            UI.SetActive(true);
-            questionCount = 0;
-            CorrectAnswerCount = 0;
-            PlayRound();
-        }
-        
+        UI.SetActive(false);
+        ResultPanel.SetActive(false);
+        TriviaPanel.SetActive(true);
+        UI.SetActive(true);
+        questionCount = 0;
+        CorrectAnswerCount = 0;
+        StartRound();
     }
 
-    public void DisplayScore()
-    {
-        ResultsText.text = "Score: " + CorrectAnswerCount.ToString() + "/3";
-    }
-
-    private void HandleTimeUp()
-    {
-        PlayRound();
-    }
-    
 }

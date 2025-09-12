@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 
-public class Countdown : MonoBehaviour
+public class CountDown : MonoBehaviour
 {
     public float countdownTime;
     public Text countdownText;
@@ -59,19 +59,25 @@ public class Countdown : MonoBehaviour
         }
         
         // makes sure that when the countdown ends, it stays as 0, updates the display, ends the coroutine
-        countdownTime = 0;
-        UpdateCountdownDisplay();
+        // finished
         timerCoroutine = null;
-        
-        // this invokes an event other classes can use to do something when the countdown ends
+
+        // fire event first so UI can show "GO"
         onCountdownFinished?.Invoke();
+
+        // hide the timer instead of showing 00:00
+        countdownTime = 0f;
+        if (countdownText) countdownText.text = "";
+
     }
 
     public void UpdateCountdownDisplay()
     {
-        // formats the countdown in minutes and seconds
-        int minutes = Mathf.FloorToInt(countdownTime / 60);
-        int seconds = Mathf.FloorToInt(countdownTime % 60);
-        countdownText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        int total = Mathf.CeilToInt(countdownTime); // keeps "1" up to the end
+        total = Mathf.Max(total, 1);                // never display 0 during the loop
+
+        int minutes = total / 60;
+        int seconds = total % 60;
+        countdownText.text = $"{minutes:00}:{seconds:00}";
     }
 }
