@@ -1301,7 +1301,7 @@ MonoBehaviour:
   UI: {fileID: 1585347895}
   TriviaPanel: {fileID: 810420972}
   ResultPanel: {fileID: 326674637}
-  Timer: {fileID: 810420978}
+  countdown: {fileID: 823274657}
   AnswerButtons:
   - {fileID: 1026671018}
   - {fileID: 1034616115}
