@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class TriviaGame : MonoBehaviour
 {
@@ -14,6 +16,7 @@ public class TriviaGame : MonoBehaviour
 
     private int questionCount = 0;
     private int CorrectAnswerCount = 0;
+    private float totalTimeTaken = 0;
     private bool answer_1, answer_2, answer_3;
     private bool roundActive = false;
 
@@ -74,6 +77,13 @@ public class TriviaGame : MonoBehaviour
         TriviaPanel.SetActive(false);
         ResultPanel.SetActive(true);
         ResultsText.text = $"Score: {CorrectAnswerCount}/3";
+        AchievementEvents.OnRoundEnded?.Invoke(new AchievementEvents.OnRoundEndedArgs
+        {
+            NumCorrectQuestions = CorrectAnswerCount,
+            NumQuestionsAnswered = questionCount,
+            TotalTimeTaken = totalTimeTaken 
+        });
+        
     }
 
     void FillQuestion()
@@ -118,8 +128,22 @@ public class TriviaGame : MonoBehaviour
             (answerIndex == 3 && answer_3))
         {
             CorrectAnswerCount++;
+            AchievementEvents.OnQuestionAnswered?.Invoke(new AchievementEvents.OnQuestionAnsweredArgs
+            {
+                AnsweredCorrectly = true,
+                TimeRemaining = (int)roundTimer.countdownTime
+            });
+        }
+        else
+        {
+            AchievementEvents.OnQuestionAnswered?.Invoke(new AchievementEvents.OnQuestionAnsweredArgs
+            {
+                AnsweredCorrectly = false,
+                TimeRemaining = (int)roundTimer.countdownTime
+            });
         }
 
+        totalTimeTaken += (int)roundTimer.countdownTime;
         EndRound();
     }
     
