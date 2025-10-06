@@ -110,24 +110,19 @@ public class TriviaGame : MonoBehaviour
             answer_3 = true;
         }
     }
-
-    public void OnAnswerClick_One()
+    public void OnAnswerClick(int answerIndex)
     {
-        if (answer_1) CorrectAnswerCount++;
+        // Check if the selected answer is correct
+        if ((answerIndex == 1 && answer_1) ||
+            (answerIndex == 2 && answer_2) ||
+            (answerIndex == 3 && answer_3))
+        {
+            CorrectAnswerCount++;
+        }
+
         EndRound();
     }
-
-    public void OnAnswerClick_Two()
-    {
-        if (answer_2) CorrectAnswerCount++;
-        EndRound();
-    }
-
-    public void OnAnswerClick_Three()
-    {
-        if (answer_3) CorrectAnswerCount++;
-        EndRound();
-    }
+    
 
 
     // restart from results
