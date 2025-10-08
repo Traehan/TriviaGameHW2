@@ -131,7 +131,7 @@ public class TriviaGame : MonoBehaviour
             AchievementEvents.OnQuestionAnswered?.Invoke(new AchievementEvents.OnQuestionAnsweredArgs
             {
                 AnsweredCorrectly = true,
-                TimeRemaining = (int)roundTimer.countdownTime
+                TimeRemaining = roundTimer.countdownTime
             });
         }
         else
@@ -139,7 +139,7 @@ public class TriviaGame : MonoBehaviour
             AchievementEvents.OnQuestionAnswered?.Invoke(new AchievementEvents.OnQuestionAnsweredArgs
             {
                 AnsweredCorrectly = false,
-                TimeRemaining = (int)roundTimer.countdownTime
+                TimeRemaining = roundTimer.countdownTime
             });
         }
 

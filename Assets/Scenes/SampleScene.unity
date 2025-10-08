@@ -2725,6 +2725,10 @@ MonoBehaviour:
   achievements:
   - {fileID: 11400000, guid: 4b2df3a60cdbfbd48998e4fe67a8be5c, type: 2}
   - {fileID: 11400000, guid: 60d8f23835823904ab79a10dee6742c9, type: 2}
+  - {fileID: 11400000, guid: 02abcc8de8f5a4edd813d247d9ff432c, type: 2}
+  - {fileID: 11400000, guid: 10c0968f3907a46b087c665c91adae33, type: 2}
+  - {fileID: 11400000, guid: 1c18b8f93706d42aea1b9740444b3a0d, type: 2}
+  - {fileID: 11400000, guid: ff421dd27acc643dfa5a353b5c73d13c, type: 2}
 --- !u!114 &1562820605
 MonoBehaviour:
   m_ObjectHideFlags: 0

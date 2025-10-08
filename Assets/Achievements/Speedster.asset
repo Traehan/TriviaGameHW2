@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3a832f196c009146b7961229da00865, type: 3}
-  m_Name: Ach_ClickQuestionOnce
-  m_EditorClassIdentifier: Assembly-CSharp::ClickQuestionAchievement
-  Description: Click the question
+  m_Script: {fileID: 11500000, guid: 14037d536c981423dbcadbd94a802763, type: 3}
+  m_Name: Speedster
+  m_EditorClassIdentifier: Assembly-CSharp::Speedster
+  Description: Answer all questions in a round correctly in less than 10 seconds
   Thumbnail: {fileID: 0}
