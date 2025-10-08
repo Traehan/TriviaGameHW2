@@ -143,7 +143,7 @@ public class TriviaGame : MonoBehaviour
             });
         }
 
-        totalTimeTaken += (int)roundTimer.countdownTime;
+        totalTimeTaken += 10 - (int)roundTimer.countdownTime;
         EndRound();
     }
     
@@ -158,6 +158,7 @@ public class TriviaGame : MonoBehaviour
         UI.SetActive(true);
         questionCount = 0;
         CorrectAnswerCount = 0;
+        totalTimeTaken = 0f;
         StartRound();
     }
 
