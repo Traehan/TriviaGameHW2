@@ -3,11 +3,15 @@ using System;
 public static class AchievementEvents
 {
     // On Achievement Get
+    
     public static Action<OnAchievementGetArgs> OnAchievementGet;
     public struct OnAchievementGetArgs
     {
         public Achievement AchievementObtained;
     }
+    public static event Action OnQuestionButtonClicked; 
+    public static void RaiseMagicButtonClicked()      // helper (optional)
+        => OnQuestionButtonClicked?.Invoke();
     
     // On Round Ended 
     public static Action<OnRoundEndedArgs> OnRoundEnded;

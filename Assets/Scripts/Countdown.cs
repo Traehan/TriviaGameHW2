@@ -53,6 +53,7 @@ public class CountDown : MonoBehaviour
         while (countdownTime > 0)
         {
             countdownTime -= Time.deltaTime;
+            //call from new class and increment delta time to overall playTime achievement
             UpdateCountdownDisplay();
             // this checks every frame. We tried to do every second but then it stopped working
             yield return null;
