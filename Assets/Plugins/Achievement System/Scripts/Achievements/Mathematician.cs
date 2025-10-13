@@ -1,10 +1,7 @@
-using System;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.InputSystem.Interactions;
 
-[CreateAssetMenu(fileName = "Ach_TimePlayed_20min", menuName = "Achievements/Time Played (20 min)")]
-public class TimePlayed20MinAchievement : Achievement
+[CreateAssetMenu(menuName = "Achievements/" + nameof(Mathematician), fileName = nameof(Mathematician))]
+public class Mathematician : Achievement
 {
     [SerializeField] private int thresholdSeconds = 20 * 60;   // 1200
     private const string SuffixUnlocked = "_UNLOCKED";
@@ -13,7 +10,7 @@ public class TimePlayed20MinAchievement : Achievement
     private int _secondsPlayed;
     private bool _isUnlocked;
 
-    public override string AchievementTitle => "Time Played — 20 Minutes";
+    
 
     public override void Subscribe()
     {

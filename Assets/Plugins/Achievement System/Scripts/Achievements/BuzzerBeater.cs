@@ -1,8 +1,10 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Achievements/" + nameof(MathMaster), fileName = nameof(MathMaster))]
-public class MathMaster : TieredAchievement
+[CreateAssetMenu(menuName = "Achievements/" + nameof(BuzzerBeater), fileName = nameof(BuzzerBeater))]
+public class BuzzerBeater : Achievement
 {
+    
+    
     public override void Subscribe()
     {
         AchievementEvents.OnQuestionAnswered += OnQuestionAnswered;
@@ -14,7 +16,12 @@ public class MathMaster : TieredAchievement
 
     private void OnQuestionAnswered(AchievementEvents.OnQuestionAnsweredArgs obj)
     {
-        if (obj.AnsweredCorrectly)
-            IncrementProgress();
+        if (obj.AnsweredCorrectly && obj.TimeRemaining <= 1)
+        {
+            GetAchievement();
+        }
+            
     }
+
+    
 }
