@@ -14,4 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp-firstpass::MathMaster
   _description: 
   _thumbnail: {fileID: 0}
-  _tiers: []
+  _tiers:
+  - Requirement: 10
+    TierDescription: Answer 10 questions correctly
+    TierThumbnail: {fileID: 0}
+    Achieved: 1
+  - Requirement: 50
+    TierDescription: Answer 50 questions correctly
+    TierThumbnail: {fileID: 0}
+    Achieved: 1
+  - Requirement: 100
+    TierDescription: Answer 100 questions correctly
+    TierThumbnail: {fileID: 0}
+    Achieved: 1

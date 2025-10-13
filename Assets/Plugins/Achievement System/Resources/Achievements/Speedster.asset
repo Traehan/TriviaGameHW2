@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14037d536c981423dbcadbd94a802763, type: 3}
   m_Name: Speedster
   m_EditorClassIdentifier: Assembly-CSharp::Speedster
-  _description: 
+  _description: Answer all questions in a round correctly in less than 10 seconds
   _thumbnail: {fileID: 0}

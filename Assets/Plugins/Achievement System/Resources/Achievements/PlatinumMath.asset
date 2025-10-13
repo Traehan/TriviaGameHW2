@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f69652af0a0e45d7ace5d7cb980b51d, type: 3}
   m_Name: PlatinumMath
   m_EditorClassIdentifier: Assembly-CSharp-firstpass::PlatinumMath
-  _description: 
+  _description: Earn all achievements
   _thumbnail: {fileID: 0}

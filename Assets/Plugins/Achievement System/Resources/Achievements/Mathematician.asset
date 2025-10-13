@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd211abaafdf44000a13bb0619e8635b, type: 3}
   m_Name: Mathematician
   m_EditorClassIdentifier: Assembly-CSharp-firstpass::Mathematician
-  _description: 
+  _description: Play for 20 minutes
   _thumbnail: {fileID: 0}
   thresholdSeconds: 1200

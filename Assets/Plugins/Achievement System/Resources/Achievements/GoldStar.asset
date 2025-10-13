@@ -18,12 +18,12 @@ MonoBehaviour:
   - Requirement: 1
     TierDescription: Answer all questions in a round correctly 1 time
     TierThumbnail: {fileID: 0}
-    Achieved: 0
+    Achieved: 1
   - Requirement: 10
     TierDescription: Answer all questions in a round correctly 10 times
     TierThumbnail: {fileID: 0}
-    Achieved: 0
-  - Requirement: 3
+    Achieved: 1
+  - Requirement: 30
     TierDescription: Answer all questions in a round correctly 30 times
     TierThumbnail: {fileID: 0}
-    Achieved: 0
+    Achieved: 1
