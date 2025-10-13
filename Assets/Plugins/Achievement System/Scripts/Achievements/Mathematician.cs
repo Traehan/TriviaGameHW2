@@ -8,7 +8,7 @@ public class Mathematician : Achievement
     private const string SuffixSeconds  = "_SECONDS";
 
     private int _secondsPlayed;
-    private bool _isUnlocked;
+    
 
     
 
@@ -24,30 +24,17 @@ public class Mathematician : Achievement
 
     private void HandleSecondPassed()
     {
-        if (_isUnlocked) return;
 
         _secondsPlayed++;
         Save(); // persist progress
 
         if (_secondsPlayed >= thresholdSeconds)
         {
-            _isUnlocked = true;
             Save();
             GetAchievement(); // notifies via AchievementEvents.OnAchievementGet
             Debug.Log($"{AchievementTitle} Achieved!");
         }
     }
 
-    public override void Save()
-    {
-        PlayerPrefs.SetInt(AchievementSaveKey + SuffixSeconds, _secondsPlayed);
-        PlayerPrefs.SetInt(AchievementSaveKey + SuffixUnlocked, _isUnlocked ? 1 : 0);
-        PlayerPrefs.Save();
-    }
-
-    public override void Load()
-    {
-        _secondsPlayed = PlayerPrefs.GetInt(AchievementSaveKey + SuffixSeconds, 0);
-        _isUnlocked    = PlayerPrefs.GetInt(AchievementSaveKey + SuffixUnlocked, 0) == 1;
-    }
+    
 }
