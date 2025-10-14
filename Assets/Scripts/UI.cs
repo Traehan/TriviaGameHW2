@@ -17,8 +17,12 @@ public class UI : MonoBehaviour
     void Awake()
     {
         // make sure we only subscribe once
-        startTimer.onCountdownFinished -= HandleCountdownDone;
-        startTimer.onCountdownFinished += HandleCountdownDone;
+        if (startTimer != null)
+        {
+            startTimer.onCountdownFinished -= HandleCountdownDone;
+            startTimer.onCountdownFinished += HandleCountdownDone;
+        }
+        
     }
 
     public void OnButtonClickStart()
