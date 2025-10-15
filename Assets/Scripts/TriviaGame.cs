@@ -1,165 +1,134 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class TriviaGame : MonoBehaviour
 {
+    [Header("Panels")]
     public GameObject UI;
     public GameObject TriviaPanel;
     public GameObject ResultPanel;
-    public CountDown roundTimer;
+
+    [Header("Timer")]
+    public CountDown roundTimer;     // uses your existing CountDown with onCountdownFinished :contentReference[oaicite:5]{index=5}
+
+    [Header("Question UI")]
     public Text Question;
     public Text Answer_1, Answer_2, Answer_3;
+
+    [Header("Results UI")]
     public Text ResultsText;
 
-    private int questionCount = 0;
-    private int CorrectAnswerCount = 0;
-    private float totalTimeTaken = 0;
-    private bool answer_1, answer_2, answer_3;
-    private bool roundActive = false;
+    // Command pattern pieces
+    private readonly CommandBus _bus = new CommandBus();
+    private GameState _state;
+    private IMathMode _mode;
 
-    private Coroutine _watch; // <— watcher for “when time <= 1”
-
-    void Start()
+    private void Awake()
     {
-        questionCount = 0;
-        CorrectAnswerCount = 0;
-        StartRound();
-    }
+        _state = new GameState();
+        _mode = new MultiplicationMode(); // swap this for AdditionMode, etc.
 
-    void StartRound()
-    {
-        // kill any previous watcher
-        if (_watch != null)
+        // ensure we only subscribe once to the timer event
+        if (roundTimer != null)
         {
-            StopCoroutine(_watch);
-            _watch = null;
+            roundTimer.onCountdownFinished -= HandleTimeExpired;
+            roundTimer.onCountdownFinished += HandleTimeExpired;
         }
-
-        FillQuestion();
-        roundActive = true;
-
-        roundTimer.StartCountdown(10f);
-        _watch = StartCoroutine(WaitUntilZeroThenAdvance());
     }
 
-    IEnumerator WaitUntilZeroThenAdvance()
+    private void Start()
     {
-        // advance when the timer shows 1 (or below), not 0
-        while (roundActive && roundTimer.countdownTime > 0f)
-            yield return null;
-
-        if (roundActive) EndRound();
+        ShowTrivia();
+        StartNewQuestion();
     }
 
-    void EndRound()
+    private void ShowTrivia()
     {
-        if (!roundActive) return;
-        roundActive = false;
-
-        if (_watch != null)
-        {
-            StopCoroutine(_watch);
-            _watch = null;
-        } // stop watcher
-
-        roundTimer.StopCountdown(); // stop timer
-
-        questionCount++;
-        if (questionCount < 3) StartRound();
-        else ShowResults();
+        UI.SetActive(true);
+        TriviaPanel.SetActive(true);
+        ResultPanel.SetActive(false);
     }
 
-    void ShowResults()
+    private void ShowResults()
     {
         TriviaPanel.SetActive(false);
         ResultPanel.SetActive(true);
-        ResultsText.text = $"Score: {CorrectAnswerCount}/3";
+        ResultsText.text = $"Score: {_state.CorrectAnswerCount}/{_state.MaxQuestions}";
         AchievementEvents.OnRoundEnded?.Invoke(new AchievementEvents.OnRoundEndedArgs
         {
-            NumCorrectQuestions = CorrectAnswerCount,
-            NumQuestionsAnswered = questionCount,
-            TotalTimeTaken = totalTimeTaken 
+            NumCorrectQuestions = _state.CorrectAnswerCount,
+            NumQuestionsAnswered = _state.QuestionCount,
+            TotalTimeTaken = _state.TotalTimeTaken
         });
-        
     }
-
-    void FillQuestion()
+    private void StartNewQuestion()
     {
-        int x = Random.Range(1, 13);
-        int y = Random.Range(1, 13);
-        int product = x * y;
-        int tinkerNumber = Random.Range(1, 8);
-
-        Question.text = $"{x}x{y}?";
-
-        answer_1 = answer_2 = answer_3 = false;
-        int slot = Random.Range(1, 4); // 1..3
-
-        if (slot == 1)
-        {
-            Answer_1.text = product.ToString();
-            Answer_2.text = (product + tinkerNumber).ToString();
-            Answer_3.text = (product - tinkerNumber).ToString();
-            answer_1 = true;
-        }
-        else if (slot == 2)
-        {
-            Answer_1.text = (product + tinkerNumber).ToString();
-            Answer_2.text = product.ToString();
-            Answer_3.text = (product - tinkerNumber).ToString();
-            answer_2 = true;
-        }
-        else
-        {
-            Answer_1.text = (product - tinkerNumber).ToString();
-            Answer_2.text = (product + tinkerNumber).ToString();
-            Answer_3.text = product.ToString();
-            answer_3 = true;
-        }
+        _bus.Dispatch(new StartRoundCommand(
+            _state,
+            _mode,
+            onQuestionReady: q =>
+            {
+                // bind UI
+                Question.text = q.Prompt;
+                Answer_1.text = q.Choices[0];
+                Answer_2.text = q.Choices[1];
+                Answer_3.text = q.Choices[2];
+            },
+            onTimerRequested: seconds =>
+            {
+                _state.BeginRound();
+                roundTimer.StartCountdown(seconds);
+            }
+        ), record: false);
     }
+
+    private void HandleTimeExpired()
+    {
+        _bus.Dispatch(new TimeExpiredCommand(
+            _state,
+            getTimeRemaining: () => roundTimer.countdownTime,
+            onEndRound: AdvanceOrShowResults
+        ));
+    }
+
+    private void AdvanceOrShowResults()
+    {
+        roundTimer.StopCountdown(); // same as your old EndRound flow :contentReference[oaicite:6]{index=6}
+
+        if (_state.HasMoreQuestions())
+            StartNewQuestion();
+        else
+            ShowResults();
+    }
+
+    // wired to the 3 answer buttons with indices 0,1,2
     public void OnAnswerClick(int answerIndex)
     {
-        // Check if the selected answer is correct
-        if ((answerIndex == 1 && answer_1) ||
-            (answerIndex == 2 && answer_2) ||
-            (answerIndex == 3 && answer_3))
-        {
-            CorrectAnswerCount++;
-            AchievementEvents.OnQuestionAnswered?.Invoke(new AchievementEvents.OnQuestionAnsweredArgs
-            {
-                AnsweredCorrectly = true,
-                TimeRemaining = roundTimer.countdownTime
-            });
-        }
-        else
-        {
-            AchievementEvents.OnQuestionAnswered?.Invoke(new AchievementEvents.OnQuestionAnsweredArgs
-            {
-                AnsweredCorrectly = false,
-                TimeRemaining = roundTimer.countdownTime
-            });
-        }
-
-        totalTimeTaken += 10 - (int)roundTimer.countdownTime;
-        EndRound();
+        _bus.Dispatch(new SubmitAnswerCommand(
+            _state,
+            answerIndex,
+            getTimeRemaining: () => roundTimer.countdownTime,
+            onEndRound: AdvanceOrShowResults
+        ));
     }
-    
 
-
-    // restart from results
+    // restart from results (wire your Restart button here)
     public void OnClickRestartRound()
     {
-        UI.SetActive(false);
-        ResultPanel.SetActive(false);
-        TriviaPanel.SetActive(true);
-        UI.SetActive(true);
-        questionCount = 0;
-        CorrectAnswerCount = 0;
-        totalTimeTaken = 0f;
-        StartRound();
+        _bus.Dispatch(new RestartGameCommand(
+            _state,
+            onPreReset: () =>
+            {
+                // make sure no lingering coroutines/timers keep firing
+                roundTimer?.StopCountdown(); // your CountDown supports this. :contentReference[oaicite:0]{index=0}
+                UI.SetActive(false);
+                ResultPanel.SetActive(false);
+            },
+            onShowTrivia: () =>
+            {
+                ShowTrivia();
+                StartNewQuestion();
+            }
+        ), record: false);
     }
-
 }
