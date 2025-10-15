@@ -10,6 +10,8 @@ public class UI : MonoBehaviour
     public GameObject OptionsPanel;
     public GameObject CountDownPanel;
     public GameObject GoPanel;
+    public GameObject AchievementsPanel;
+    public GameObject StartPanel;
     public Button startButton;   
     public CountDown startTimer;
     
@@ -29,6 +31,18 @@ public class UI : MonoBehaviour
     {
         CountDownPanel.SetActive(true);
         startTimer.StartCountdown(5f);
+    }
+
+    public void OnButtonClickAchievements()
+    {
+        StartPanel.SetActive(false);
+        AchievementsPanel.SetActive(true);
+    }
+
+    public void OnButtonClickBack()
+    {
+        AchievementsPanel.SetActive(false);
+        StartPanel.SetActive(true);
     }
     
     private void HandleCountdownDone()
