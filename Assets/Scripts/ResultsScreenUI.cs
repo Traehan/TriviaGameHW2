@@ -8,13 +8,13 @@ public class ResultsScreenUI : MonoBehaviour
 
     private void Start()
     {
-        var state = GameSession.Instance.CurrentState;
+        var state = GameSession.State;
         resultsText.text = $"Score: {state.CorrectAnswerCount}/{state.MaxQuestions}";
     }
 
     public void OnClickRestart()
     {
-        GameSession.Instance.ResetState();
+        GameSession.State.Reset();
         sceneManager.LoadSceneByIndex(1); // Game
     }
 

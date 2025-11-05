@@ -17,12 +17,14 @@ public class TriviaGame : MonoBehaviour
     // Command pattern pieces
     private readonly CommandBus _bus = new CommandBus();
     private IMathMode _mode;
-    private GameState State => GameSession.Instance.CurrentState;
+    private GameState State => GameSession.State;
+    
 
     private void Awake()
     {
         _mode = new MultiplicationMode(); // swap this for AdditionMode, etc.
-
+        
+        
         // ensure we only subscribe once to the timer event
         if (roundTimer != null)
         {
@@ -55,6 +57,7 @@ public class TriviaGame : MonoBehaviour
                 roundTimer.StartCountdown(seconds);
             }
         ), record: false);
+
     }
 
     private void HandleTimeExpired()
@@ -69,6 +72,7 @@ public class TriviaGame : MonoBehaviour
     private void AdvanceOrShowResults()
     {
         roundTimer.StopCountdown(); // same as your old EndRound flow :contentReference[oaicite:6]{index=6}
+
 
         if (State.HasMoreQuestions())
             StartNewQuestion();

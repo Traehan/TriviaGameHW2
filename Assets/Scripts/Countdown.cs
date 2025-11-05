@@ -17,14 +17,9 @@ public class CountDown : MonoBehaviour
 
     public void StartCountdown(float startTime)
     {
-        // stops any running timers
-        if (timerCoroutine != null)
-        {
-            StopCoroutine(timerCoroutine);
-        }
-        
-        // sets the time of the countdown and runs the coroutine
+        StopCountdown();
         countdownTime = startTime;
+        UpdateCountdownDisplay();
         timerCoroutine = StartCoroutine(CountdownCoroutine());
     }
 
@@ -59,17 +54,15 @@ public class CountDown : MonoBehaviour
             yield return null;
         }
         
+        countdownTime = 0;
+        UpdateCountdownDisplay();
+        
         // makes sure that when the countdown ends, it stays as 0, updates the display, ends the coroutine
         // finished
         timerCoroutine = null;
 
         // fire event first so UI can show "GO"
         onCountdownFinished?.Invoke();
-
-        // hide the timer instead of showing 00:00
-        countdownTime = 0f;
-        if (countdownText) countdownText.text = "";
-
     }
 
     public void UpdateCountdownDisplay()

@@ -32,10 +32,14 @@ public class GameState
 
     public void RecordAnswer(bool correct, float timeRemaining)
     {
-        if (correct) CorrectAnswerCount++;
-        TotalTimeTaken += Mathf.Clamp(PerQuestionTime - timeRemaining, 0f, PerQuestionTime);
-        QuestionCount++;
+        if (RoundActive) // only record if we're mid-round
+        {
+            if (correct) CorrectAnswerCount++;
+            TotalTimeTaken += Mathf.Clamp(PerQuestionTime - timeRemaining, 0f, PerQuestionTime);
+            QuestionCount++;
+        }
     }
+
 
     public bool HasMoreQuestions() => QuestionCount < MaxQuestions;
 
