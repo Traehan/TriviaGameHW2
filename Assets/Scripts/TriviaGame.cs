@@ -3,10 +3,8 @@ using UnityEngine.UI;
 
 public class TriviaGame : MonoBehaviour
 {
-    [Header("Panels")]
-    public GameObject UI;
-    public GameObject TriviaPanel;
-    public GameObject ResultPanel;
+    [Header("Scene Loader")]
+    public SceneManager sceneManager;
 
     [Header("Timer")]
     public CountDown roundTimer;     // uses your existing CountDown with onCountdownFinished :contentReference[oaicite:5]{index=5}
@@ -38,29 +36,9 @@ public class TriviaGame : MonoBehaviour
 
     private void Start()
     {
-        ShowTrivia();
         StartNewQuestion();
     }
-
-    private void ShowTrivia()
-    {
-        UI.SetActive(true);
-        TriviaPanel.SetActive(true);
-        ResultPanel.SetActive(false);
-    }
-
-    private void ShowResults()
-    {
-        TriviaPanel.SetActive(false);
-        ResultPanel.SetActive(true);
-        ResultsText.text = $"Score: {_state.CorrectAnswerCount}/{_state.MaxQuestions}";
-        AchievementEvents.OnRoundEnded?.Invoke(new AchievementEvents.OnRoundEndedArgs
-        {
-            NumCorrectQuestions = _state.CorrectAnswerCount,
-            NumQuestionsAnswered = _state.QuestionCount,
-            TotalTimeTaken = _state.TotalTimeTaken
-        });
-    }
+    
     private void StartNewQuestion()
     {
         _bus.Dispatch(new StartRoundCommand(
@@ -98,7 +76,19 @@ public class TriviaGame : MonoBehaviour
         if (_state.HasMoreQuestions())
             StartNewQuestion();
         else
-            ShowResults();
+            LoadResultsScene();
+    }
+    
+    private void LoadResultsScene()
+    {
+        AchievementEvents.OnRoundEnded?.Invoke(new AchievementEvents.OnRoundEndedArgs
+        {
+            NumCorrectQuestions = _state.CorrectAnswerCount,
+            NumQuestionsAnswered = _state.QuestionCount,
+            TotalTimeTaken = _state.TotalTimeTaken
+        });
+
+        sceneManager.LoadSceneByIndex(2);
     }
 
     // wired to the 3 answer buttons with indices 0,1,2
@@ -121,13 +111,10 @@ public class TriviaGame : MonoBehaviour
             {
                 // make sure no lingering coroutines/timers keep firing
                 roundTimer?.StopCountdown(); // your CountDown supports this. :contentReference[oaicite:0]{index=0}
-                UI.SetActive(false);
-                ResultPanel.SetActive(false);
             },
             onShowTrivia: () =>
             {
-                ShowTrivia();
-                StartNewQuestion();
+                sceneManager.LoadSceneByIndex(1);
             }
         ), record: false);
     }
