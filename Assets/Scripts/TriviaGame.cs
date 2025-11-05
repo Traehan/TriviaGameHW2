@@ -12,18 +12,15 @@ public class TriviaGame : MonoBehaviour
     [Header("Question UI")]
     public Text Question;
     public Text Answer_1, Answer_2, Answer_3;
-
-    [Header("Results UI")]
-    public Text ResultsText;
+    
 
     // Command pattern pieces
     private readonly CommandBus _bus = new CommandBus();
-    private GameState _state;
     private IMathMode _mode;
+    private GameState State => GameSession.Instance.CurrentState;
 
     private void Awake()
     {
-        _state = new GameState();
         _mode = new MultiplicationMode(); // swap this for AdditionMode, etc.
 
         // ensure we only subscribe once to the timer event
@@ -42,7 +39,7 @@ public class TriviaGame : MonoBehaviour
     private void StartNewQuestion()
     {
         _bus.Dispatch(new StartRoundCommand(
-            _state,
+            State,
             _mode,
             onQuestionReady: q =>
             {
@@ -54,7 +51,7 @@ public class TriviaGame : MonoBehaviour
             },
             onTimerRequested: seconds =>
             {
-                _state.BeginRound();
+                State.BeginRound();
                 roundTimer.StartCountdown(seconds);
             }
         ), record: false);
@@ -63,7 +60,7 @@ public class TriviaGame : MonoBehaviour
     private void HandleTimeExpired()
     {
         _bus.Dispatch(new TimeExpiredCommand(
-            _state,
+            State,
             getTimeRemaining: () => roundTimer.countdownTime,
             onEndRound: AdvanceOrShowResults
         ));
@@ -73,7 +70,7 @@ public class TriviaGame : MonoBehaviour
     {
         roundTimer.StopCountdown(); // same as your old EndRound flow :contentReference[oaicite:6]{index=6}
 
-        if (_state.HasMoreQuestions())
+        if (State.HasMoreQuestions())
             StartNewQuestion();
         else
             LoadResultsScene();
@@ -83,9 +80,9 @@ public class TriviaGame : MonoBehaviour
     {
         AchievementEvents.OnRoundEnded?.Invoke(new AchievementEvents.OnRoundEndedArgs
         {
-            NumCorrectQuestions = _state.CorrectAnswerCount,
-            NumQuestionsAnswered = _state.QuestionCount,
-            TotalTimeTaken = _state.TotalTimeTaken
+            NumCorrectQuestions = State.CorrectAnswerCount,
+            NumQuestionsAnswered = State.QuestionCount,
+            TotalTimeTaken = State.TotalTimeTaken
         });
 
         sceneManager.LoadSceneByIndex(2);
@@ -95,7 +92,7 @@ public class TriviaGame : MonoBehaviour
     public void OnAnswerClick(int answerIndex)
     {
         _bus.Dispatch(new SubmitAnswerCommand(
-            _state,
+            State,
             answerIndex,
             getTimeRemaining: () => roundTimer.countdownTime,
             onEndRound: AdvanceOrShowResults
@@ -106,7 +103,7 @@ public class TriviaGame : MonoBehaviour
     public void OnClickRestartRound()
     {
         _bus.Dispatch(new RestartGameCommand(
-            _state,
+            State,
             onPreReset: () =>
             {
                 // make sure no lingering coroutines/timers keep firing

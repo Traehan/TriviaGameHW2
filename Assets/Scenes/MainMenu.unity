@@ -1568,6 +1568,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &530342793
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 530342795}
+  - component: {fileID: 530342794}
+  m_Layer: 0
+  m_Name: GameSession
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &530342794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530342793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62f7af635237a4a56b7af151bde16dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameSession
+--- !u!4 &530342795
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530342793}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1600.9703, y: 1385.5688, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &558958581
 GameObject:
   m_ObjectHideFlags: 0
@@ -2190,7 +2234,6 @@ MonoBehaviour:
   Answer_1: {fileID: 34674797}
   Answer_2: {fileID: 2113110297}
   Answer_3: {fileID: 502554137}
-  ResultsText: {fileID: 375185332}
 --- !u!114 &810420978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3811,6 +3854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d2a16905a4abf40a93ceb9653e077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI
+  sceneManager: {fileID: 0}
   StartScreen: {fileID: 1778390492}
   TriviaGame: {fileID: 810420972}
   OptionsPanel: {fileID: 1585347895}
@@ -3853,6 +3897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d2a16905a4abf40a93ceb9653e077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI
+  sceneManager: {fileID: 1403635832}
   StartScreen: {fileID: 1778390492}
   TriviaGame: {fileID: 810420972}
   OptionsPanel: {fileID: 1585347895}
@@ -4317,3 +4362,4 @@ SceneRoots:
   - {fileID: 1858016397}
   - {fileID: 527682084}
   - {fileID: 1403635833}
+  - {fileID: 530342795}
