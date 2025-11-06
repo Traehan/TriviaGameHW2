@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ResultsScreenUI : MonoBehaviour
 {
     public Text resultsText;
-    public SceneManager sceneManager;
+    [FormerlySerializedAs("sceneManager")] public SceneLoader sceneLoader;
 
     private void Start()
     {
@@ -15,11 +16,11 @@ public class ResultsScreenUI : MonoBehaviour
     public void OnClickRestart()
     {
         GameSession.State.Reset();
-        sceneManager.LoadSceneByIndex(1); // Game
+        sceneLoader.LoadSceneByIndex(1); // Game
     }
 
     public void OnClickMainMenu()
     {
-        sceneManager.LoadSceneByIndex(0); // Main Menu
+        sceneLoader.LoadSceneByIndex(0); // Main Menu
     }
 }

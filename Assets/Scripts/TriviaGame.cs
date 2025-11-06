@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 public class TriviaGame : MonoBehaviour
 {
     [Header("Scene Loader")]
-    public SceneManager sceneManager;
+    public SceneLoader sceneLoader;
 
     [Header("Timer")]
     public CountDown roundTimer;     // uses your existing CountDown with onCountdownFinished :contentReference[oaicite:5]{index=5}
@@ -22,10 +24,17 @@ public class TriviaGame : MonoBehaviour
 
     private void Awake()
     {
-        _mode = new MultiplicationMode(); // swap this for AdditionMode, etc.
-        
-        
-        // ensure we only subscribe once to the timer event
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+        // Ensure only one TriviaGame ever exists in the scene
+        var existing = FindObjectsOfType<TriviaGame>();
+        if (existing.Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        _mode = new MultiplicationMode();
+
         if (roundTimer != null)
         {
             roundTimer.onCountdownFinished -= HandleTimeExpired;
@@ -33,10 +42,70 @@ public class TriviaGame : MonoBehaviour
         }
     }
 
+
     private void Start()
     {
+        StartCoroutine(InitializeAfterFrame());
+    }
+    
+    private IEnumerator InitializeAfterFrame()
+    {
+        // Wait one frame so UI and timer exist
+        yield return null;
+
+        // Try to rebind missing UI elements
+        Question  = Question  ?? FindTextByName("Question_Text");
+        Answer_1  = Answer_1  ?? FindTextByName("AnswerText_1");
+        Answer_2  = Answer_2  ?? FindTextByName("AnswerText_2");
+        Answer_3  = Answer_3  ?? FindTextByName("AnswerText_3");
+        roundTimer = roundTimer ?? GameObject.FindObjectOfType<CountDown>(true);
+
+
+        // If timer found, hook it up
+        if (roundTimer != null)
+        {
+            roundTimer.onCountdownFinished -= HandleTimeExpired;
+            roundTimer.onCountdownFinished += HandleTimeExpired;
+        }
+
+        // Verify all bindings before continuing
+        if (roundTimer == null || Question == null)
+        {
+            Debug.LogError("TriviaGame: Missing required UI references. Check scene setup!");
+            yield break;
+        }
+
+        // All good → start first question
         StartNewQuestion();
     }
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Only rebind UI if we’ve entered the Game scene
+        if (scene.name == "Game")
+        {
+            Question = GameObject.Find("QuestionText")?.GetComponent<Text>();
+            Answer_1 = GameObject.Find("Answer1Text")?.GetComponent<Text>();
+            Answer_2 = GameObject.Find("Answer2Text")?.GetComponent<Text>();
+            Answer_3 = GameObject.Find("Answer3Text")?.GetComponent<Text>();
+            roundTimer = GameObject.Find("RoundTimer")?.GetComponent<CountDown>();
+            if (roundTimer != null)
+            {
+                roundTimer.onCountdownFinished -= HandleTimeExpired;
+                roundTimer.onCountdownFinished += HandleTimeExpired;
+            }
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+
+        if (roundTimer != null)
+            roundTimer.onCountdownFinished -= HandleTimeExpired;
+    }
+
+
+
     
     private void StartNewQuestion()
     {
@@ -45,16 +114,18 @@ public class TriviaGame : MonoBehaviour
             _mode,
             onQuestionReady: q =>
             {
-                // bind UI
-                Question.text = q.Prompt;
-                Answer_1.text = q.Choices[0];
-                Answer_2.text = q.Choices[1];
-                Answer_3.text = q.Choices[2];
+                SafeSetText(Question, q.Prompt);
+                SafeSetText(Answer_1, q.Choices[0]);
+                SafeSetText(Answer_2, q.Choices[1]);
+                SafeSetText(Answer_3, q.Choices[2]);
             },
             onTimerRequested: seconds =>
             {
                 State.BeginRound();
-                roundTimer.StartCountdown(seconds);
+                if (roundTimer != null)
+                    roundTimer.StartCountdown(seconds);
+                else
+                    Debug.LogWarning("TriviaGame: roundTimer missing when starting countdown!");
             }
         ), record: false);
 
@@ -62,6 +133,8 @@ public class TriviaGame : MonoBehaviour
 
     private void HandleTimeExpired()
     {
+        if (roundTimer == null) return;
+        
         _bus.Dispatch(new TimeExpiredCommand(
             State,
             getTimeRemaining: () => roundTimer.countdownTime,
@@ -71,8 +144,8 @@ public class TriviaGame : MonoBehaviour
 
     private void AdvanceOrShowResults()
     {
-        roundTimer.StopCountdown(); // same as your old EndRound flow :contentReference[oaicite:6]{index=6}
-
+        if (roundTimer != null)
+            roundTimer.StopCountdown();
 
         if (State.HasMoreQuestions())
             StartNewQuestion();
@@ -89,12 +162,14 @@ public class TriviaGame : MonoBehaviour
             TotalTimeTaken = State.TotalTimeTaken
         });
 
-        sceneManager.LoadSceneByIndex(2);
+        sceneLoader.LoadSceneByIndex(2);
     }
 
     // wired to the 3 answer buttons with indices 0,1,2
     public void OnAnswerClick(int answerIndex)
     {
+        if (roundTimer == null) return;
+        
         _bus.Dispatch(new SubmitAnswerCommand(
             State,
             answerIndex,
@@ -106,17 +181,36 @@ public class TriviaGame : MonoBehaviour
     // restart from results (wire your Restart button here)
     public void OnClickRestartRound()
     {
-        _bus.Dispatch(new RestartGameCommand(
-            State,
-            onPreReset: () =>
-            {
-                // make sure no lingering coroutines/timers keep firing
-                roundTimer?.StopCountdown(); // your CountDown supports this. :contentReference[oaicite:0]{index=0}
-            },
-            onShowTrivia: () =>
-            {
-                sceneManager.LoadSceneByIndex(1);
-            }
-        ), record: false);
+        if (roundTimer != null)
+        {
+            roundTimer.onCountdownFinished -= HandleTimeExpired;
+            roundTimer.StopCountdown(); 
+        }
+        
+        // Reset the game state completely
+        GameSession.State.Reset();
+        
+        // Destroy this instance so Unity doesn’t keep a ghost reference
+        Destroy(gameObject);
+        
+            
+        SceneManager.LoadScene("Game");
     }
+    
+    private void SafeSetText(Text target, string value)
+    {
+        if (target != null)
+            target.text = value;
+    }
+    
+    private Text FindTextByName(string name)
+    {
+        foreach (var text in GameObject.FindObjectsOfType<Text>(true))
+        {
+            if (text.name == name)
+                return text;
+        }
+        return null;
+    }
+
 }

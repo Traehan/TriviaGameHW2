@@ -2184,13 +2184,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f880230ed316e4b86777453542c80a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TriviaGame
-  sceneManager: {fileID: 2044853165}
+  sceneLoader: {fileID: 0}
   roundTimer: {fileID: 810420978}
   Question: {fileID: 1546322992}
   Answer_1: {fileID: 34674797}
   Answer_2: {fileID: 2113110297}
   Answer_3: {fileID: 502554137}
-  ResultsText: {fileID: 375185332}
 --- !u!114 &810420978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3767,6 +3766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d2a16905a4abf40a93ceb9653e077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI
+  sceneLoader: {fileID: 0}
   StartScreen: {fileID: 1778390492}
   TriviaGame: {fileID: 810420972}
   OptionsPanel: {fileID: 1585347895}
@@ -3809,6 +3809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d2a16905a4abf40a93ceb9653e077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI
+  sceneLoader: {fileID: 0}
   StartScreen: {fileID: 1778390492}
   TriviaGame: {fileID: 810420972}
   OptionsPanel: {fileID: 1585347895}
@@ -4310,8 +4311,8 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 1778390497}
   - {fileID: 1524187236}
-  - {fileID: 810420976}
   - {fileID: 1585347899}
+  - {fileID: 810420976}
   - {fileID: 326674641}
   - {fileID: 1562820606}
   - {fileID: 1858016397}

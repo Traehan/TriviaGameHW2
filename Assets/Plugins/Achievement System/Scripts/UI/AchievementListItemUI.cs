@@ -29,25 +29,38 @@ public class AchievementListItemUI : MonoBehaviour
     public void TrackAchievement(Achievement achievement)
     {
         trackedAchievement = achievement;
-        AchievementEvents.OnAchievementGet += _ => UpdateUI();
-        AchievementEvents.OnTieredAchievementProgressed += _ => UpdateUI();
+        AchievementEvents.OnAchievementGet += OnAchievementGet;
+        AchievementEvents.OnTieredAchievementProgressed += OnTieredProgressed;
         UpdateUI();
+    }
+    
+    private void OnAchievementGet(AchievementEvents.OnAchievementGetArgs args)
+    {
+        if (args.AchievementObtained == trackedAchievement)
+            UpdateUI();
+    }
+
+    private void OnTieredProgressed(AchievementEvents.OnTieredAchievementProgressedArgs args)
+    {
+        if (args.tieredAchievement == trackedAchievement)
+            UpdateUI();
     }
 
     public void UpdateUI()
     {
+        if (trackedAchievement == null)
+            return;
         titleText.text = trackedAchievement.AchievementTitle;
         descriptionText.text = trackedAchievement.AchievementDescription;
         icon.sprite = trackedAchievement.AchievementThumbnail;
 
         panel.color = trackedAchievement.HasAchievement ? NormalColor : NotUnlockedColor;
 
-        if (trackedAchievement is TieredAchievement)
+        if (trackedAchievement is TieredAchievement tiered)
         {
-            TieredAchievement tieredAchievement = trackedAchievement as TieredAchievement;
-            progressSlider.value = tieredAchievement.GetProgressPercentage();
-            progressText.text = $"{tieredAchievement.GetProgressValue()} / {tieredAchievement.GetTierRequirement()}";
-            if (tieredAchievement.IsMaxed) { panel.color = MaxedColor; }
+            progressSlider.value = tiered.GetProgressPercentage();
+            progressText.text = $"{tiered.GetProgressValue()} / {tiered.GetTierRequirement()}";
+            if (tiered.IsMaxed) { panel.color = MaxedColor; }
         }
         else
         {
@@ -62,4 +75,16 @@ public class AchievementListItemUI : MonoBehaviour
     {
         canvasGroup.alpha = Mathf.Clamp(newOpacity, 0.0f, 1.0f);
     }
+    
+    public void UnsubscribeFromEvents()
+    {
+        AchievementEvents.OnTieredAchievementProgressed -= OnTieredProgressed;
+        AchievementEvents.OnAchievementGet -= OnAchievementGet;
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromEvents();
+    }
+
 }
