@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
-    
+    [FormerlySerializedAs("sceneManager")] public SceneLoader sceneLoader;
     public GameObject StartScreen;
     public GameObject TriviaGame;
     public GameObject OptionsPanel;
@@ -58,11 +59,7 @@ public class UI : MonoBehaviour
         yield return new WaitForSeconds(1f);       // or WaitForSecondsRealtime(1f)
         GoPanel.SetActive(false);
 
-        // move to game UI
-        CountDownPanel.SetActive(false);
-        StartScreen.SetActive(false);
-        TriviaGame.SetActive(true);
-        OptionsPanel.SetActive(true);
+        sceneLoader.LoadSceneByIndex(1);
     }
 
     public void OnButtonClickQuit()

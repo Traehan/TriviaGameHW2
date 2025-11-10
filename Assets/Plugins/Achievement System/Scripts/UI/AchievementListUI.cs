@@ -60,4 +60,19 @@ public class AchievementListUI : MonoBehaviour
             achievementUI.SetOpacity(opacity);
         }
     }
+    
+    private void OnDestroy()
+    {
+        // Unsubscribe each AchievementListItemUI from its events before the parent is destroyed
+        foreach (var item in achievementUis)
+        {
+            if (item != null)
+            {
+                item.UnsubscribeFromEvents();
+            }
+        }
+
+        achievementUis.Clear();
+    }
+
 }
