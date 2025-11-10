@@ -2118,7 +2118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -2184,7 +2184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f880230ed316e4b86777453542c80a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TriviaGame
-  sceneLoader: {fileID: 0}
+  sceneLoader: {fileID: 2044853165}
   roundTimer: {fileID: 810420978}
   Question: {fileID: 1546322992}
   Answer_1: {fileID: 34674797}
@@ -3699,7 +3699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -4191,7 +4191,7 @@ GameObject:
   - component: {fileID: 2044853166}
   - component: {fileID: 2044853165}
   m_Layer: 0
-  m_Name: SceneManager
+  m_Name: SceneLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
