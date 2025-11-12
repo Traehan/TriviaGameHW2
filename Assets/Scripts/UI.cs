@@ -1,25 +1,73 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
+    [FormerlySerializedAs("sceneManager")] public SceneLoader sceneLoader;
+    public GameObject StartScreen;
+    public GameObject TriviaGame;
+    public GameObject OptionsPanel;
+    public GameObject CountDownPanel;
+    public GameObject GoPanel;
+    public GameObject AchievementsPanel;
+    public GameObject StartPanel;
+    public Button startButton;   
+    public CountDown startTimer;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        // make sure we only subscribe once
+        if (startTimer != null)
+        {
+            startTimer.onCountdownFinished -= HandleCountdownDone;
+            startTimer.onCountdownFinished += HandleCountdownDone;
+        }
         
     }
 
     public void OnButtonClickStart()
     {
-        //Disable Button
-        //start coroutine for 5 seconds
-        //reveal GO
-        //disable Start Screen ---> Change to Game Screen
-        
+        CountDownPanel.SetActive(true);
+        startTimer.StartCountdown(5f);
+    }
+
+    public void OnButtonClickAchievements()
+    {
+        StartPanel.SetActive(false);
+        AchievementsPanel.SetActive(true);
+    }
+
+    public void OnButtonClickBack()
+    {
+        AchievementsPanel.SetActive(false);
+        StartPanel.SetActive(true);
+    }
+    
+    private void HandleCountdownDone()
+    {
+        StartCoroutine(ShowGoThenStart());
+    }
+    
+    private System.Collections.IEnumerator ShowGoThenStart()
+    {
+        // show "GO" for ~1s
+        CountDownPanel.SetActive(false);
+        GoPanel.SetActive(true);
+        yield return new WaitForSeconds(1f);       // or WaitForSecondsRealtime(1f)
+        GoPanel.SetActive(false);
+
+        sceneLoader.LoadSceneByIndex(1);
+    }
+
+    public void OnButtonClickQuit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.ExitPlaymode(); // or: UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit(); // quits the built game
+#endif
     }
 }
