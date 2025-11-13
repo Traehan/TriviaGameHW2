@@ -5,16 +5,20 @@ public class SceneLoader : MonoBehaviour
 {
     public void LoadSceneByIndex(int sceneIndex)
     {
+        Debug.Log("SceneLoader called: " + sceneIndex);
         switch (sceneIndex)
         {
             case 0:
-                UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene("MainMenu");
                 break;
             case 1:
-                UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+                SceneManager.LoadScene("Game");
                 break;
             case 2:
-                UnityEngine.SceneManagement.SceneManager.LoadScene("ResultsScreen");
+               SceneManager.LoadScene("ResultsScreen");
+                break;
+            case 3:
+                SceneManager.LoadScene("GameSelectionScene");
                 break;
             default:
                 Debug.LogWarning("Invalid scene index provided.");
