@@ -16,6 +16,8 @@ public class UI : MonoBehaviour
     public Button startButton;   
     public CountDown startTimer;
     
+    private bool countdownHandled = false;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -27,10 +29,20 @@ public class UI : MonoBehaviour
         }
         
     }
-
-    public void OnButtonClickStart()
+    
+    private void OnEnable()
     {
-        CountDownPanel.SetActive(true);
+        countdownHandled = false;
+    }
+
+    public void OnMainMenuClickStart()
+    {
+        sceneLoader.LoadSceneByIndex(3);
+    }
+    
+    public void OnOptionsClickStart()
+    {
+        OptionsPanel.SetActive(false);
         startTimer.StartCountdown(5f);
     }
 
@@ -48,18 +60,33 @@ public class UI : MonoBehaviour
     
     private void HandleCountdownDone()
     {
+        if (countdownHandled)
+        {
+            Debug.Log("[UI] HandleCountdownDone called but already handled - ignoring.");
+            return;
+        }
+
+        // extra safety: check the timer's finished flag if available
+        if (startTimer != null && !startTimer.HasFinished)
+        {
+            Debug.LogWarning("[UI] HandleCountdownDone called but startTimer.HasFinished is false. Ignoring.");
+            return;
+        }
+
+        countdownHandled = true;
+        Debug.Log("[UI] HandleCountdownDone - starting ShowGoThenStart coroutine.");
         StartCoroutine(ShowGoThenStart());
     }
     
     private System.Collections.IEnumerator ShowGoThenStart()
     {
-        // show "GO" for ~1s
         CountDownPanel.SetActive(false);
         GoPanel.SetActive(true);
-        yield return new WaitForSeconds(1f);       // or WaitForSecondsRealtime(1f)
+        yield return new WaitForSeconds(1f);
         GoPanel.SetActive(false);
 
-        sceneLoader.LoadSceneByIndex(1);
+        // Load the next scene after countdown finishes and "GO" disappears
+        AppStateController.Instance.GoToGame();
     }
 
     public void OnButtonClickQuit()

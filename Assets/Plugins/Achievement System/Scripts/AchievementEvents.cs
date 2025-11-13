@@ -23,6 +23,7 @@ public static class AchievementEvents
         public int NumQuestionsAnswered;
         public int NumCorrectQuestions;
         public float TotalTimeTaken;
+        public ModeKind CurrentMode;
     }
     
     // On Question Answered (Invoke this on a per project basis)

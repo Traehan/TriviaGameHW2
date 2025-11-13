@@ -64,6 +64,6 @@ public class GameSelectionUI : MonoBehaviour
     private void OnStartClicked()
     {
         // Go to Game scene; TriviaGame will read the selected mode & max-questions
-        AppStateController.Instance.GoToGame();
+        FindFirstObjectByType<UI>()?.OnOptionsClickStart();
     }
 }
