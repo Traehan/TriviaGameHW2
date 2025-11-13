@@ -17,12 +17,14 @@ public class TriviaGame : MonoBehaviour
 
     private readonly CommandBus _bus = new CommandBus();
     private IMathMode _mode;
+    private ModeKind currentMode;
     private GameState State => GameSession.State;
 
     private void Awake()
     {
         SceneManager.sceneLoaded += HandleSceneLoaded;
 
+        currentMode = AppStateController.Instance.SelectedMode;
         var existing = FindObjectsOfType<TriviaGame>();
         if (existing.Length > 1)
         {
@@ -143,7 +145,8 @@ public class TriviaGame : MonoBehaviour
         {
             NumCorrectQuestions   = State.CorrectAnswerCount,
             NumQuestionsAnswered  = State.QuestionCount,
-            TotalTimeTaken        = State.TotalTimeTaken
+            TotalTimeTaken        = State.TotalTimeTaken,
+            CurrentMode         = currentMode
         });
 
         sceneLoader.LoadSceneByIndex(2);
@@ -171,7 +174,7 @@ public class TriviaGame : MonoBehaviour
 
         GameSession.State.Reset();
         Destroy(gameObject);
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("GameSelectionScene");
     }
 
     private void SafeSetText(Text target, string value)
