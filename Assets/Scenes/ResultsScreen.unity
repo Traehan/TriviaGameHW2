@@ -1091,7 +1091,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f880230ed316e4b86777453542c80a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TriviaGame
-  sceneLoader: {fileID: 0}
   roundTimer: {fileID: 0}
   Question: {fileID: 1020340881}
   Answer_1: {fileID: 1023836892}
@@ -2821,50 +2820,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1299233577}
   m_CullTransparentMesh: 1
---- !u!1 &1341735043
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1341735045}
-  - component: {fileID: 1341735044}
-  m_Layer: 0
-  m_Name: SceneManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1341735044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1341735043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f30ef696b5174d55942141bf4d30bff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SceneManager
---- !u!4 &1341735045
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1341735043}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1600.9703, y: 1385.5688, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1378825978
 GameObject:
   m_ObjectHideFlags: 0
@@ -3585,7 +3540,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0024414062, y: 0.0020141602}
+  m_AnchoredPosition: {x: 0.0024414062, y: 0.001953125}
   m_SizeDelta: {x: 2560, y: 1440}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1550962760
@@ -3788,7 +3743,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d2a16905a4abf40a93ceb9653e077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI
-  sceneLoader: {fileID: 0}
   StartScreen: {fileID: 1778390492}
   TriviaGame: {fileID: 0}
   OptionsPanel: {fileID: 1585347895}
@@ -3828,7 +3782,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResultsScreenUI
   resultsText: {fileID: 375185332}
-  sceneLoader: {fileID: 1341735044}
 --- !u!4 &1669505556
 Transform:
   m_ObjectHideFlags: 0
@@ -3877,7 +3830,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d2a16905a4abf40a93ceb9653e077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI
-  sceneLoader: {fileID: 0}
   StartScreen: {fileID: 1778390492}
   TriviaGame: {fileID: 0}
   OptionsPanel: {fileID: 1585347895}
@@ -4394,6 +4346,5 @@ SceneRoots:
   - {fileID: 1562820606}
   - {fileID: 1858016397}
   - {fileID: 527682084}
-  - {fileID: 1341735045}
   - {fileID: 1669505556}
   - {fileID: 401177303}

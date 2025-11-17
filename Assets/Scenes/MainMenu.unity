@@ -2038,50 +2038,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2864295847605172429, guid: d63e973d111d04d4986a3dd3e050ef38, type: 3}
   m_PrefabInstance: {fileID: 1403528279}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1403635831
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1403635833}
-  - component: {fileID: 1403635832}
-  m_Layer: 0
-  m_Name: SceneManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1403635832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1403635831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f30ef696b5174d55942141bf4d30bff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SceneManager
---- !u!4 &1403635833
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1403635831}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1600.9703, y: 1385.5688, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1524187233
 GameObject:
   m_ObjectHideFlags: 0
@@ -2400,7 +2356,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d2a16905a4abf40a93ceb9653e077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI
-  sceneLoader: {fileID: 0}
   StartScreen: {fileID: 1778390492}
   TriviaGame: {fileID: 0}
   OptionsPanel: {fileID: 1585347895}
@@ -2442,7 +2397,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d2a16905a4abf40a93ceb9653e077b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI
-  sceneLoader: {fileID: 1403635832}
   StartScreen: {fileID: 1778390492}
   TriviaGame: {fileID: 0}
   OptionsPanel: {fileID: 1585347895}
@@ -2703,5 +2657,4 @@ SceneRoots:
   - {fileID: 1562820606}
   - {fileID: 1858016397}
   - {fileID: 527682084}
-  - {fileID: 1403635833}
   - {fileID: 530342795}
