@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class ResultsScreenUI : MonoBehaviour
 {
     public Text resultsText;
-    [FormerlySerializedAs("sceneManager")] public SceneLoader sceneLoader;
 
     private void Start()
     {
@@ -16,11 +15,11 @@ public class ResultsScreenUI : MonoBehaviour
     public void OnClickRestart()
     {
         GameSession.State.Reset();
-        sceneLoader.LoadSceneByIndex(1); // Game
+        AppStateController.Instance.GoToSelection();
     }
 
     public void OnClickMainMenu()
     {
-        sceneLoader.LoadSceneByIndex(0); // Main Menu
+        AppStateController.Instance.GoToStart(); // Main Menu
     }
 }

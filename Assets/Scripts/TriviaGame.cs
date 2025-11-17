@@ -5,8 +5,6 @@ using System.Collections;
 
 public class TriviaGame : MonoBehaviour
 {
-    [Header("Scene Loader")]
-    public SceneLoader sceneLoader;
 
     [Header("Timer")]
     public CountDown roundTimer;
@@ -149,7 +147,7 @@ public class TriviaGame : MonoBehaviour
             CurrentMode         = currentMode
         });
 
-        sceneLoader.LoadSceneByIndex(2);
+        AppStateController.Instance.GoToResults();
     }
 
     public void OnAnswerClick(int answerIndex)

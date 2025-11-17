@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
-    [FormerlySerializedAs("sceneManager")] public SceneLoader sceneLoader;
     public GameObject StartScreen;
     public GameObject TriviaGame;
     public GameObject OptionsPanel;
@@ -37,7 +36,7 @@ public class UI : MonoBehaviour
 
     public void OnMainMenuClickStart()
     {
-        sceneLoader.LoadSceneByIndex(3);
+        AppStateController.Instance.GoToSelection();
     }
     
     public void OnOptionsClickStart()
